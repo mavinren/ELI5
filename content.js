@@ -238,7 +238,26 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        padding: 0 14px 14px;
+        padding: 0 14px 10px;
+      }
+
+      .eli5-credit {
+        margin: 0;
+        padding: 0 14px 12px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 11px;
+        line-height: 1.4;
+        color: #B9C4BC;
+      }
+
+      .eli5-credit a {
+        color: #F2C14E;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      .eli5-credit a:hover {
+        text-decoration: underline;
       }
 
       .eli5-slider {
@@ -469,7 +488,21 @@
           <span>Explaining…</span>
         </div>
       </div>
+      <p class="eli5-credit">
+        Created by
+        <a href="https://x.com/konvashon" target="_blank" rel="noopener noreferrer">Mavin Emmanuel</a>
+      </p>
     `;
+
+    const creditLink = cardEl.querySelector(".eli5-credit a");
+    creditLink.addEventListener("mousedown", (event) => {
+      event.stopPropagation();
+    });
+    creditLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      window.open("https://x.com/konvashon", "_blank", "noopener,noreferrer");
+    });
 
     const closeBtn = cardEl.querySelector(".eli5-close");
     closeBtn.addEventListener("mousedown", (event) => {
@@ -516,7 +549,12 @@
         </div>
         <button type="button" class="eli5-copy">Copy</button>
       `;
-      cardEl.appendChild(footer);
+      const credit = cardEl.querySelector(".eli5-credit");
+      if (credit) {
+        cardEl.insertBefore(footer, credit);
+      } else {
+        cardEl.appendChild(footer);
+      }
 
       footer.querySelectorAll(".eli5-segment").forEach((btn) => {
         btn.addEventListener("mousedown", (event) => {

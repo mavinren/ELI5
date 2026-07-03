@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ELI5: Explain Like I'm 5",
   "version": "1.0.0",
-  "description": "Highlight any confusing text and get a plain-English explanation at three depths: 5, 15, and Expert.",
+  "description": "Created by Mavin Emmanuel. Highlight any confusing text and get a plain-English explanation at three depths: 5, 15, and Expert.",
   "permissions": ["contextMenus", "storage", "scripting", "activeTab"],
   "host_permissions": ["https://generativelanguage.googleapis.com/*"],
   "background": {

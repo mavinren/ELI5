@@ -174,3 +174,22 @@ body {
   font-style: normal;
   color: #f2c14e;
 }
+
+.credit {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(243, 239, 227, 0.1);
+  font-size: 12px;
+  line-height: 1.4;
+  color: #b9c4bc;
+}
+
+.credit a {
+  color: #f2c14e;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.credit a:hover {
+  text-decoration: underline;
+}
