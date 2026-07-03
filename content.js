@@ -2,6 +2,8 @@
   if (globalThis.__ELI5_CONTENT_LOADED__) return;
   globalThis.__ELI5_CONTENT_LOADED__ = true;
 
+  const ext = globalThis.browser ?? globalThis.chrome;
+
   const HOST_ID = "eli5-extension-host";
   const Z_MAX = "2147483647";
   const LEVELS = ["five", "fifteen", "expert"];
@@ -655,7 +657,7 @@
     btn.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      chrome.runtime.openOptionsPage();
+      ext.runtime.openOptionsPage();
     });
 
     positionCard(selectionRect);
@@ -673,39 +675,53 @@
     positionCard(selectionRect);
   }
 
+  function handleExplainResponse(response) {
+    if (!response) {
+      renderError("No response from the extension. Please try again.");
+      return;
+    }
+
+    if (response.error === "NO_KEY") {
+      renderNoKey();
+      return;
+    }
+
+    if (response.error) {
+      renderError(response.error);
+      return;
+    }
+
+    if (!response.levels) {
+      renderError("Received an incomplete explanation. Please try again.");
+      return;
+    }
+
+    levelsCache = response.levels;
+    activeLevel = "five";
+    renderBodySuccess();
+  }
+
   function requestExplanation(text) {
-    chrome.runtime.sendMessage({ type: "ELI5_REQUEST", text }, (response) => {
-      if (chrome.runtime.lastError) {
+    const pending = ext.runtime.sendMessage({ type: "ELI5_REQUEST", text });
+
+    if (pending && typeof pending.then === "function") {
+      pending.then(handleExplainResponse).catch((err) => {
         renderError(
-          chrome.runtime.lastError.message ||
+          err?.message || "Could not reach the extension background script."
+        );
+      });
+      return;
+    }
+
+    ext.runtime.sendMessage({ type: "ELI5_REQUEST", text }, (response) => {
+      if (ext.runtime.lastError) {
+        renderError(
+          ext.runtime.lastError.message ||
             "Could not reach the extension background script."
         );
         return;
       }
-
-      if (!response) {
-        renderError("No response from the extension. Please try again.");
-        return;
-      }
-
-      if (response.error === "NO_KEY") {
-        renderNoKey();
-        return;
-      }
-
-      if (response.error) {
-        renderError(response.error);
-        return;
-      }
-
-      if (!response.levels) {
-        renderError("Received an incomplete explanation. Please try again.");
-        return;
-      }
-
-      levelsCache = response.levels;
-      activeLevel = "five";
-      renderBodySuccess();
+      handleExplainResponse(response);
     });
   }
 
@@ -774,19 +790,16 @@
     keepInViewport(cardEl);
   });
 
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  ext.runtime.onMessage.addListener((message) => {
     if (message?.type !== "ELI5_TRIGGER") return;
 
     const text = (message.text || "").trim();
-    if (!text) {
-      sendResponse({ ok: false });
-      return;
-    }
+    if (!text) return { ok: false };
 
     const info = getSelectionInfo();
     const rect = info?.rect || selectionRect || null;
     openCard(text, rect);
     removePill();
-    sendResponse({ ok: true });
+    return { ok: true };
   });
 })();

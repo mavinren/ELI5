@@ -1,3 +1,5 @@
+const ext = globalThis.browser ?? globalThis.chrome;
+
 const apiKeyInput = document.getElementById("api-key");
 const saveBtn = document.getElementById("save-btn");
 const statusEl = document.getElementById("status");
@@ -20,7 +22,7 @@ function setStatus(message, type) {
 }
 
 async function loadKey() {
-  const stored = await chrome.storage.local.get("geminiApiKey");
+  const stored = await ext.storage.local.get("geminiApiKey");
   if (stored.geminiApiKey) {
     apiKeyInput.value = stored.geminiApiKey;
   }
@@ -35,7 +37,7 @@ async function saveKey() {
     return;
   }
 
-  await chrome.storage.local.set({ geminiApiKey: key });
+  await ext.storage.local.set({ geminiApiKey: key });
   setStatus("Saved ✓", "is-success");
 }
 

@@ -16,22 +16,34 @@ Flip between them with a slider. No second API call. No "please wait while we re
 
 You bring your own free [Gemini API key](https://aistudio.google.com/apikey). There is no backend, no account system, and no surprise invoice. The extension talks to Google from your browser. Running cost: **$0**.
 
-Works in Chrome, Edge, Brave, and other Chromium browsers.
+Works in Chrome, Edge, Brave, other Chromium browsers, and Firefox (121+). Same folder, same files, no separate build.
 
 ---
 
 ## Quick start
 
 1. Grab a free Gemini key: [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
-2. Open `chrome://extensions`
-3. Turn on **Developer mode** (top right)
-4. Click **Load unpacked** and select this repo folder (the one that contains `manifest.json`)
-5. Click the ELI5 toolbar icon, paste your key, hit **Save key**
-6. Open any normal webpage, highlight something baffling, and either:
+2. Install the extension (Chrome or Firefox, pick your fighter below)
+3. Click the ELI5 toolbar icon, paste your key, hit **Save key**
+4. Open any normal webpage, highlight something baffling, and either:
    - click the floating **Explain** pill, or
    - right-click and choose **Explain like I'm 5**
 
 If nothing happens on a tab that was already open before you installed the extension, refresh the page. Content scripts are polite; they do not teleport into tabs that predate them. The context menu will try to inject itself if needed, but a refresh is the reliable fix.
+
+### Chrome / Edge / Brave
+
+1. Open `chrome://extensions` (or `edge://extensions`)
+2. Turn on **Developer mode** (top right)
+3. Click **Load unpacked** and select this repo folder (the one that contains `manifest.json`)
+
+### Firefox
+
+1. Open `about:debugging#/runtime/this-firefox`
+2. Click **Load Temporary Add-on...**
+3. Select `manifest.json` inside this repo folder
+
+Temporary add-ons in Firefox go away when you quit the browser. That is a Firefox rule for unsigned extensions, not ELI5 being dramatic. For a permanent install you sign it through [addons.mozilla.org](https://addons.mozilla.org/developers/) (free developer account) and install the signed `.xpi`.
 
 ---
 
@@ -99,7 +111,7 @@ No server of ours sits in the middle. If Google is down, ELI5 is down. If your k
 | Do you run a proxy? | No. |
 | Do you log selections? | No. There is nothing to log into. |
 | What does it cost to run? | $0 for you, assuming you stay on Gemini's free tier. |
-| What about the Chrome Web Store? | Publishing there needs Google's one-time **$5** developer registration. That is a publisher fee, not a per-user fee, and it has nothing to do with this repo's runtime cost. |
+| What about the stores? | Chrome Web Store needs Google's one-time **$5** developer registration. Firefox Add-ons (AMO) is free to publish. Those are publisher fees, not per-user fees, and they have nothing to do with this repo's runtime cost. |
 
 Selected text is sent to Google so the model can explain it. Do not highlight your nuclear launch codes. Or do. I am a README, not your lawyer.
 
@@ -117,24 +129,30 @@ Chrome will list these. Here is the plain-English version:
 | `activeTab` | Lets that on-demand injection work when you invoke the extension from the context menu. |
 | Host access to `generativelanguage.googleapis.com` | So the service worker can call Gemini. Nothing else. |
 
-The content script matches `<all_urls>` so the pill can appear on normal websites. It still cannot run on locked-down pages like `chrome://` settings or the Chrome Web Store. That is a browser rule, not a bug report waiting to happen.
+The content script matches `<all_urls>` so the pill can appear on normal websites. It still cannot run on locked-down pages like `chrome://` / `about:` settings or the browser stores. That is a browser rule, not a bug report waiting to happen.
 
 ---
 
-## Install details (for when step 4 goes sideways)
+## Install details (for when loading goes sideways)
 
-**Load the folder that contains `manifest.json`.** If Chrome says the manifest is missing, you selected the parent directory by accident. Go one level deeper (or shallower). Computers are very literal.
+**Load the folder that contains `manifest.json`.** If Chrome says the manifest is missing, you selected the parent directory by accident. Go one level deeper (or shallower). Computers are very literal. In Firefox, pick `manifest.json` itself when the file picker asks.
 
-After you change `manifest.json` permissions, hit **Reload** on the extension card at `chrome://extensions`. Then refresh the page you are testing.
+After you change `manifest.json` permissions:
 
-Supported browsers in practice:
+- Chrome: hit **Reload** on the extension card at `chrome://extensions`
+- Firefox: remove the temporary add-on and load it again from `about:debugging`
+
+Then refresh the page you are testing.
+
+Supported browsers:
 
 - Google Chrome
 - Microsoft Edge
 - Brave
 - Other Chromium forks that still speak Manifest V3
+- Firefox 121+ (Manifest V3 service worker support)
 
-Firefox is a different animal and is not targeted here.
+One codebase. APIs go through `browser` when it exists (Firefox) and fall back to `chrome` (Chromium). The manifest includes a `browser_specific_settings.gecko` block so Firefox knows who we are; Chrome ignores that block and gets on with its day.
 
 ---
 
@@ -227,9 +245,9 @@ The recurring motif is a small uppercase **ELI5** label with a short amber under
 
 ## Manual test checklist
 
-Use this after a fresh load:
+Use this after a fresh load on Chrome and Firefox:
 
-- [ ] Loads via **Load unpacked** with no errors
+- [ ] Loads via **Load unpacked** / **Load Temporary Add-on** with no errors
 - [ ] Highlighting text shows the Explain pill near the selection
 - [ ] Pill opens a card: spinner, then the **5** explanation
 - [ ] Slider switches **5 / 15 / Expert** with only one `generateContent` network call
@@ -246,10 +264,13 @@ Use this after a fresh load:
 ## Troubleshooting
 
 **"Manifest file is missing or unreadable"**  
-You loaded the wrong folder. Select the directory that contains `manifest.json`.
+You loaded the wrong folder. Select the directory that contains `manifest.json` (Chrome) or the `manifest.json` file itself (Firefox).
+
+**Firefox add-on vanished after restart**  
+Temporary add-ons are temporary. Load it again from `about:debugging`, or sign a release on AMO for a permanent install.
 
 **Context menu does nothing**  
-Reload the extension, refresh the page, try again. Restricted pages (`chrome://`, Web Store, some PDF viewers) will not run content scripts.
+Reload the extension, refresh the page, try again. Restricted pages (`chrome://`, `about:`, browser stores, some PDF viewers) will not run content scripts.
 
 **Pill never appears**  
 Refresh the tab after install. Selection must be longer than two characters.
@@ -261,7 +282,7 @@ Re-copy the key from AI Studio. No extra spaces, no quotes, no "I pasted my groc
 Free tier has limits. Wait a moment. Touch grass. Try again.
 
 **Card appears but stays on "Explaining..."**  
-Check the service worker console on `chrome://extensions` (service worker link under ELI5) and the page's content-script console. Network tab should show a call to `generativelanguage.googleapis.com`.
+Check the background script console (`chrome://extensions` service worker link, or Firefox's inspect on the extension at `about:debugging`) and the page's content-script console. Network tab should show a call to `generativelanguage.googleapis.com`.
 
 ---
 
@@ -272,7 +293,7 @@ There is no build pipeline. Edit a file, reload the extension, refresh the test 
 Suggested loop:
 
 1. Change code
-2. `chrome://extensions` → Reload
+2. Reload the extension (Chrome: `chrome://extensions` → Reload; Firefox: re-load temporary add-on)
 3. Refresh the test tab
 4. Highlight something pretentious
 5. See if it still works
@@ -283,12 +304,21 @@ Model used: `gemini-2.5-flash` via the Gemini `generateContent` endpoint. Temper
 
 ## Publishing (optional)
 
-This repo is set up for **Load unpacked**. Shipping to the Chrome Web Store is optional and separate:
+This repo is set up for local install. Store listings are optional and separate.
+
+### Chrome Web Store
 
 1. Pay Google's one-time **$5** developer registration (publisher cost, not user cost)
 2. Zip the extension files (not a parent folder full of unrelated junk)
 3. Upload through the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole)
 4. Fill out the listing, privacy disclosures, and screenshots like a responsible adult
+
+### Firefox Add-ons (AMO)
+
+1. Create a free account at [addons.mozilla.org/developers](https://addons.mozilla.org/developers/)
+2. Zip the same extension files
+3. Submit for signing / listing
+4. Install the signed `.xpi` for a permanent Firefox install
 
 Users still supply their own Gemini keys. Your store listing fee does not become their monthly bill.
 

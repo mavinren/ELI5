@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ELI5: Explain Like I'm 5",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Created by Mavin Emmanuel. Highlight any confusing text and get a plain-English explanation at three depths: 5, 15, and Expert.",
   "permissions": ["contextMenus", "storage", "scripting", "activeTab"],
   "host_permissions": ["https://generativelanguage.googleapis.com/*"],
@@ -25,11 +25,21 @@
       "128": "icons/icon128.png"
     }
   },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
   "options_page": "options.html",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "eli5@mavinren.com",
+      "strict_min_version": "121.0"
+    }
   }
 }

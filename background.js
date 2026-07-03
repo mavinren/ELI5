@@ -1,57 +1,52 @@
+const ext = globalThis.browser ?? globalThis.chrome;
+
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_URL =
   `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const MAX_TEXT_LENGTH = 6000;
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create({
-      id: "eli5-explain",
-      title: "Explain like I'm 5",
-      contexts: ["selection"],
-    });
+ext.runtime.onInstalled.addListener(async () => {
+  await ext.contextMenus.removeAll();
+  await ext.contextMenus.create({
+    id: "eli5-explain",
+    title: "Explain like I'm 5",
+    contexts: ["selection"],
   });
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+ext.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId !== "eli5-explain" || !tab?.id) return;
   triggerExplain(tab.id, info.selectionText || "", info.frameId ?? 0);
 });
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+ext.runtime.onMessage.addListener((message) => {
   if (message?.type !== "ELI5_REQUEST") return;
 
-  handleExplainRequest(message.text)
-    .then(sendResponse)
-    .catch((err) => {
-      sendResponse({
-        error: err?.message || "Something went wrong. Please try again.",
-      });
-    });
-
-  return true;
+  return handleExplainRequest(message.text).catch((err) => ({
+    error: err?.message || "Something went wrong. Please try again.",
+  }));
 });
 
 async function triggerExplain(tabId, text, frameId) {
   const message = { type: "ELI5_TRIGGER", text };
 
   try {
-    await chrome.tabs.sendMessage(tabId, message, { frameId });
+    await ext.tabs.sendMessage(tabId, message, { frameId });
     return;
   } catch {
     // Content script missing (common on tabs open before install/reload).
   }
 
   try {
-    await chrome.scripting.executeScript({
+    await ext.scripting.executeScript({
       target: { tabId, frameIds: [frameId] },
       files: ["content.js"],
     });
-    await chrome.tabs.sendMessage(tabId, message, { frameId });
+    await ext.tabs.sendMessage(tabId, message, { frameId });
   } catch (err) {
     console.error("ELI5: could not open explanation card", err);
     try {
-      await chrome.scripting.executeScript({
+      await ext.scripting.executeScript({
         target: { tabId },
         func: () => {
           alert(
@@ -60,13 +55,13 @@ async function triggerExplain(tabId, text, frameId) {
         },
       });
     } catch {
-      // Restricted page (chrome://, Web Store, etc.)
+      // Restricted page (about:, AMO, etc.)
     }
   }
 }
 
 async function handleExplainRequest(rawText) {
-  const stored = await chrome.storage.local.get("geminiApiKey");
+  const stored = await ext.storage.local.get("geminiApiKey");
   const apiKey = (stored.geminiApiKey || "").trim();
 
   if (!apiKey) {
