@@ -1,6 +1,6 @@
 # ELI5: Explain Like I'm 5
 
-Created by [Mavin Emmanuel](https://x.com/konvashon).
+Created by [Mavin Emmanuel](https://x.com/omavinemmanuel).
 
 The internet is full of text that was clearly written by someone who has never met a human being. Terms of service. Stack traces. Academic abstracts. Corporate "synergy" emails. You highlight the confusing bit, ELI5 turns it into plain English, and you get on with your life.
 
@@ -332,6 +332,6 @@ Use it, fork it, improve it, explain your own terms of service with it. If you s
 
 ## Credits
 
-Created by [Mavin Emmanuel](https://x.com/konvashon).
+Created by [Mavin Emmanuel](https://x.com/omavinemmanuel).
 
 Built for people who read "force majeure" and feel personally attacked. Powered by your Gemini key and a deep suspicion of jargon.

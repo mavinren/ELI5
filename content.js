@@ -492,7 +492,7 @@
       </div>
       <p class="eli5-credit">
         Created by
-        <a href="https://x.com/konvashon" target="_blank" rel="noopener noreferrer">Mavin Emmanuel</a>
+        <a href="https://x.com/omavinemmanuel" target="_blank" rel="noopener noreferrer">Mavin Emmanuel</a>
       </p>
     `;
 
@@ -503,7 +503,7 @@
     creditLink.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
-      window.open("https://x.com/konvashon", "_blank", "noopener,noreferrer");
+      window.open("https://x.com/omavinemmanuel", "_blank", "noopener,noreferrer");
     });
 
     const closeBtn = cardEl.querySelector(".eli5-close");
