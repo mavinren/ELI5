@@ -1,0 +1,176 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 320px;
+  min-height: 100%;
+  background: #16241e;
+  color: #f3efe3;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.page {
+  padding: 18px 16px 20px;
+}
+
+.header {
+  margin-bottom: 18px;
+}
+
+.eyebrow-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f2c14e;
+  line-height: 1;
+}
+
+.eyebrow-bar {
+  width: 28px;
+  height: 3px;
+  border-radius: 2px;
+  background: #f2c14e;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #f3efe3;
+}
+
+.lede {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #b9c4bc;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b9c4bc;
+}
+
+.input {
+  width: 100%;
+  appearance: none;
+  border: 1px solid rgba(243, 239, 227, 0.14);
+  border-radius: 10px;
+  background: rgba(243, 239, 227, 0.04);
+  color: #f3efe3;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.input::placeholder {
+  color: rgba(185, 196, 188, 0.7);
+}
+
+.input:focus {
+  border-color: rgba(242, 193, 78, 0.55);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: #f2c14e;
+  color: #16241e;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: filter 150ms ease;
+}
+
+.btn:hover {
+  filter: brightness(1.05);
+}
+
+.status {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  min-height: 1em;
+}
+
+.status.is-success {
+  color: #9fd6a9;
+}
+
+.status.is-error {
+  color: #e7a0a0;
+}
+
+.link {
+  color: #f2c14e;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.howto-title {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #b9c4bc;
+}
+
+.steps {
+  margin: 0;
+  padding-left: 18px;
+  color: #f3efe3;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.steps li + li {
+  margin-top: 8px;
+}
+
+.steps em {
+  font-style: normal;
+  color: #f2c14e;
+}

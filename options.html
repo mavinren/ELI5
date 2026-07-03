@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ELI5 Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <div class="eyebrow-wrap">
+          <p class="eyebrow">ELI5</p>
+          <div class="eyebrow-bar"></div>
+        </div>
+        <h1 class="title">Explain Like I'm 5</h1>
+        <p class="lede">
+          Your Gemini API key is stored locally in this browser only. Requests
+          go directly from Chrome to Google, never through any third-party
+          server.
+        </p>
+      </header>
+
+      <section class="panel" aria-labelledby="key-label">
+        <label id="key-label" class="label" for="api-key">Gemini API key</label>
+        <input
+          id="api-key"
+          class="input"
+          type="password"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Paste your key here"
+        />
+        <div class="actions">
+          <button id="save-btn" class="btn" type="button">Save key</button>
+          <p id="status" class="status" role="status" aria-live="polite"></p>
+        </div>
+        <a
+          class="link"
+          href="https://aistudio.google.com/apikey"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get a free Gemini API key →
+        </a>
+      </section>
+
+      <section class="howto" aria-labelledby="howto-title">
+        <h2 id="howto-title" class="howto-title">How to use it</h2>
+        <ol class="steps">
+          <li>Highlight confusing text on any webpage.</li>
+          <li>
+            Click the Explain pill, or right-click →
+            <em>Explain like I'm 5</em>.
+          </li>
+          <li>Drag the 5 / 15 / Expert slider to adjust the depth.</li>
+        </ol>
+      </section>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>
